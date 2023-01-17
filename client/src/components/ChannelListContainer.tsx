@@ -35,6 +35,16 @@ export default function ChannelListContainer() {
       <Sidebar />
       <div className='channel-list__list__wrapper'>
         <CompanyHeader />
+        <ChannelSearch />
+        <ChannelList
+          filters={{}}
+          channelRenderFilterFn={() => []}
+          List={props => (
+            <TeamChannelList {...props} type='team'>
+              <p>Nopgfe</p>
+            </TeamChannelList>
+          )}
+        />
       </div>
     </>
   );
