@@ -1,26 +1,20 @@
-import { useState } from 'react';
+import './App.css';
+import { StreamChat } from 'stream-chat';
+import { Chat } from 'stream-chat-react';
+import Cookies from 'universal-cookie';
+import { ChannelContainer, ChannelListContainer } from './components';
 
-function App() {
-  const [count, setCount] = useState(0);
+const apiKey = 'kmr6utqcym2r';
+
+export default function App() {
+  const client = StreamChat.getInstance(apiKey);
 
   return (
-    <div className='App'>
-      <div>
-        <a href='https://vitejs.dev' target='_blank'>
-          <img src='/vite.svg' className='logo' alt='Vite logo' />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className='card'>
-        <button onClick={() => setCount(count => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-        <p>Hello</p>
-      </div>
-      <p className='read-the-docs'>Click on the Vite and React logos to learn more</p>
+    <div className='app__wrapper'>
+      <Chat client={client} theme='team light'>
+        <ChannelListContainer />
+        <ChannelContainer />
+      </Chat>
     </div>
   );
 }
-
-export default App;
