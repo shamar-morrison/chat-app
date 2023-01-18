@@ -1,19 +1,13 @@
-import { ReactNode, FC } from 'react';
-import { APIErrorResponse, ErrorFromResponse } from 'stream-chat';
+import { ReactNode } from 'react';
 import { ChannelListMessengerProps } from 'stream-chat-react';
 import { AddChannel } from '../assets';
 
 type Props = {
   type: 'team' | 'messaging';
-  children: ReactNode;
+  children?: ReactNode;
 } & ChannelListMessengerProps;
 
-export default function TeamChannelList({
-  error = false as unknown as ErrorFromResponse<APIErrorResponse>,
-  loading,
-  type,
-  children,
-}: Props) {
+export default function TeamChannelList({ loading, type, children, error = null }: Props) {
   const errorMessage =
     type === 'team' ? (
       <div className='team-channel-list'>
@@ -38,6 +32,7 @@ export default function TeamChannelList({
   if (loading) {
     return loadingMessage;
   }
+
   return (
     <div className='team-channel-list'>
       <div className='team-channel-list__header'>

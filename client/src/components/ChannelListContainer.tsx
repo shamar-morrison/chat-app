@@ -30,21 +30,31 @@ function CompanyHeader() {
 }
 
 export default function ChannelListContainer() {
+  const teamChannelList = (
+    <ChannelList
+      filters={{}}
+      channelRenderFilterFn={() => []}
+      List={props => <TeamChannelList {...props} type='team' />}
+      Preview={props => <TeamChannelPreview {...props} type='team' />}
+    />
+  );
+  const directChannelList = (
+    <ChannelList
+      filters={{}}
+      channelRenderFilterFn={() => []}
+      List={props => <TeamChannelList {...props} type='messaging' />}
+      Preview={props => <TeamChannelPreview {...props} type='messaging' />}
+    />
+  );
+
   return (
     <>
       <Sidebar />
       <div className='channel-list__list__wrapper'>
         <CompanyHeader />
         <ChannelSearch />
-        <ChannelList
-          filters={{}}
-          channelRenderFilterFn={() => []}
-          List={props => (
-            <TeamChannelList {...props} type='team'>
-              <p>Nopgfe</p>
-            </TeamChannelList>
-          )}
-        />
+        {teamChannelList}
+        {directChannelList}
       </div>
     </>
   );
