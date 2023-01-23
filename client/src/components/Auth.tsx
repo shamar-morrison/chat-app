@@ -8,9 +8,11 @@ const initialState = {
   username: '',
   password: '',
   confirmPassword: '',
-  phone: '',
+  phoneNumber: '',
   avatarURL: '',
 };
+
+const cookies = new Cookies();
 
 export default function Auth() {
   const [form, setForm] = useState(initialState);
@@ -20,29 +22,37 @@ export default function Auth() {
     setForm(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const URL = 'http://localhost:5000/auth';
-    const { username, password, fullName, phone, avatarURL } = form;
-    const data = {
-      username,
-      password,
-      ...(isSignUp && { fullName, phone, avatarURL }),
-    };
-    axios
-      .post(URL, data)
-      .then(res => {
-        const { token, user } = res.data;
-        const cookies = new Cookies();
-        cookies.set('token', token);
-        cookies.set('user', user);
-        window.location.reload();
-      })
-      .catch(err => console.log(err));
-  }
-
   function switchMode() {
     setIsSignUp(prevIsSignUp => !prevIsSignUp);
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const URL = 'http://localhost:5000/auth';
+    const { username, password, fullName, phoneNumber, avatarURL } = form;
+
+    const {
+      data: { token, userID, hashedPassword },
+    } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'signin'}`, {
+      username,
+      password,
+      fullName,
+      phoneNumber,
+      avatarURL,
+    });
+
+    cookies.set('token', token);
+    cookies.set('username', username);
+    cookies.set('fullName', fullName);
+    cookies.set('userID', userID);
+
+    if (isSignUp) {
+      cookies.set('phone', phoneNumber);
+      cookies.set('avatarURL', avatarURL);
+      cookies.set('hashedPassword', hashedPassword);
+    }
+
+    window.location.reload();
   }
 
   return (
@@ -101,12 +111,12 @@ export default function Auth() {
             )}
             {isSignUp && (
               <div className='auth__form-container_fields-content_input'>
-                <label htmlFor='phone'>Phone Number</label>
+                <label htmlFor='phoneNumber'>Phone Number</label>
                 <input
                   type='text'
-                  name='phone'
+                  name='phoneNumber'
                   placeholder='Phone Number'
-                  id='phone'
+                  id='phoneNumber'
                   onChange={handleChange}
                   required
                 />
